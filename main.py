@@ -1,20 +1,38 @@
-usuarios = {}
+import hashlib
+import json
+
+def criptografar(senha):
+    return hashlib.sha256(senha.encode()).hexdigest()   
+
+def salvar(usuarios):
+    with open("usuarios.json", "w") as f:
+        json.dump(usuarios, f)
+
+def carregar():
+    try:
+        with open("usuarios.json", "r") as f:
+            return json.load(f)
+    except:
+        return {}
 
 def cadastrar():
-    usuario = input("Digite um usuário: ")
-    senha = input("Digite uma senha: ")
+    usuario = input("Usuário: ")
+    senha = criptografar(input("Senha: "))
     
     usuarios[usuario] = senha
-    print("Usuário cadastrado!")
+    salvar(usuarios)
 
 def login():
     usuario = input("Usuário: ")
-    senha = input("Senha: ")
+    senha = criptografar(input("Senha: "))
     
     if usuario in usuarios and usuarios[usuario] == senha:
-        print("Login bem-sucedido!")
+        print("Login OK")
     else:
-        print("Usuário ou senha incorretos!")
+        print("Erro")
+
+
+usuarios = carregar()
 
 while True:
     opcao = input("\n1 - Cadastrar\n2 - Login\n3 - Sair\nEscolha: ")
